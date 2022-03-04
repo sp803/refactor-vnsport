@@ -1,0 +1,35 @@
+### Sign up
+POST http://localhost:4000/api/user/signup
+Content-Type: application/json
+
+{
+  "name": "toan",
+  "dob": "12432423",
+  "gender": "male",
+  "password": "1234",
+  "email": "123@mail.com"
+}
+
+### Sign in
+
+POST http://localhost:4000/api/user/signin
+Content-Type: application/json
+
+{
+  "password": "1234",
+  "email": "123@mail.com"
+}
+
+### Logout all
+
+POST http://localhost:4000/api/user/logout-all
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjNjUyNjdiNi04Nzk4LTQ3ZDYtYTNjNC1mZDUyZjA3M2ZkYTgiLCJ1c2VyS2V5IjoiYzM0MWVlZWMtYmNkNC00OTE2LTkyNTQtM2IwOGY1MjAxZWNkIiwiaWF0IjoxNjQ2MzY5NTY2fQ.4r1CfkEH1V9CFT3zm_92dSmYFleFwW814pHzUfFiEvI
+
+
+### Check token
+
+POST http://localhost:4000/api/user/check-token
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjNjUyNjdiNi04Nzk4LTQ3ZDYtYTNjNC1mZDUyZjA3M2ZkYTgiLCJ1c2VyS2V5IjoiYzM0MWVlZWMtYmNkNC00OTE2LTkyNTQtM2IwOGY1MjAxZWNkIiwiaWF0IjoxNjQ2MzY5NTY2fQ.4r1CfkEH1V9CFT3zm_92dSmYFleFwW814pHzUfFiEvI
+
