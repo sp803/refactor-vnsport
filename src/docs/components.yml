@@ -88,6 +88,99 @@ components:
         soldCount: 0
         visitedCount: 0
         reviewCount: 0
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+        price:
+          type: number
+        discountPrice:
+          type: number
+        state:
+          type: string
+          enum: [available, outStock, hidden]
+        mainImageUrl:
+          type: string
+        soldCount:
+          type: number
+          description: Number of products has sold
+        visitedCount:
+          type: number
+          description: Number of product detail visited
+        reviewCount:
+          type: number
+          description: Number of product's review
+        availableQuantity:
+          type: number
+          description: Number of products in stock
+        brandId:
+          type: number
+        categoryId:
+          type: number
+      example:
+        id: 08c0e96e-35ff-4c38-89cd-33547ff3d995
+        title: Dây thừng tập thể lực
+        detail: Xe đạp tập thể dục BC66013 có yên tựa lưng được thiết kế chắc chắn, vận hành cực êm và phù hợp dùng tập cho người già hoặc người phục hồi chức năng. Có nhu cầu mua xe đạp tập BC66013 chính hãng, giá rẻ nhất vui lòng liên hệ Dụng Cụ Thể Dục !\r\nXe đạp tập thể dục BC66013\r\n- Toàn bộ khung chính của xe đạp được làm từ thép dày, có khả năng chịu lực tốt và bề mặt vật liệu được sơn tĩnh điện có tác dụng giúp chống rỉ sét. Khung xe bền bỉ, đảm bảo không
+        price: 1100000
+        discountPrice: null
+        state: available
+        mainImageUrl: /images/images_5e522593-027a-4ae9-b403-820fc35e20b1_.jpg
+        soldCount: 0
+        visitedCount: 0
+        reviewCount: 0
+        availableQuantity: 25
+        categoryId: 5
+        brandId: 9
+    Brand:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+      example:
+        id: 5
+        name: Adidas
+    Category:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        code:
+          type: string
+          description: Unique string id, generated from name
+        categoryGroupId:
+          type: number
+      example:
+        id: 17
+        name: Găng Tay Boxing
+        code: gang-tay-boxing
+        CategoryGroupId: 3
+    CategoryGroup:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        code:
+          type: Unique string id, generated from name
+    ProductImage:
+      type: object
+      properties:
+        id: 
+          type: number
+        url: 
+          type: string
+        productId:
+          type: string
 
   responses:
     DuplicateEmail:
@@ -97,7 +190,7 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            message: Email already taken
+            error: Email already taken
     Unauthorized:
       description: Unauthorized
       content:
@@ -105,7 +198,7 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            message: Invalid token
+            error: Invalid token
     Forbidden:
       description: Forbidden
       content:
@@ -113,7 +206,7 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            message: Missing authorization
+            error: Missing authorization
     NotFound:
       description: Not found
       content:
@@ -121,5 +214,4 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-            code: 404
-            message: Not found
+            error: Not found

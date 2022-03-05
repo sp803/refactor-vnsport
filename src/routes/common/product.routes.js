@@ -76,9 +76,17 @@ routes.get(
  *      200:
  *        content:
  *          application/json:
- *            type: object
- *            properties:
- *
+ *            schema:
+ *              type: object
+ *              properties:
+ *                product:
+ *                  $ref: '#components/schemas/Product'
+ *                brand:
+ *                  $ref: '#components/schemas/Brand'
+ *                category:
+ *                  $ref: '#components/schemas/Category'
+ *      400:
+ *        $ref: '#components/responses/NotFound'
  */
 routes.get(
   '/:productId',

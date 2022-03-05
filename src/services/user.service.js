@@ -70,7 +70,7 @@ const changeUserKey = async ({ user, userId }) => {
 
 const validateUserKey = async (userId, userKey) => {
   const user = await User.findByPk(userId, { include: Account });
-  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'userId not exists');
+  if (!user) throw new ApiError(httpStatus.UNAUTHORIZED);
 
   if (user.account.userKey !== userKey)
     throw new ApiError(httpStatus.UNAUTHORIZED);

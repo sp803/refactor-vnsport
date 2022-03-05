@@ -23,7 +23,34 @@ const getProductDetail = {
   }),
 };
 
+const addProduct = {
+  body: Joi.object({
+    title: Joi.string().min(4).max(101).required(),
+    detail: Joi.string().min(1).required(),
+    price: Joi.number().min(0).required(),
+    discountPrice: Joi.number().min(0).max(Joi.ref('price')),
+    warrantyPeriodByDay: Joi.number().min(0).required(),
+    availableQuantity: Joi.number().min(0),
+    state: Joi.string().equal(...Object.values(Product.state)),
+    brandId: Joi.string().required(),
+    categoryId: Joi.string().required(),
+  }),
+  files: Joi.object({
+    images: Joi.array(),
+    mainImage: Joi.array().min(1).required(),
+  }),
+};
+
+const addPreviewImages = {
+  params: Joi.object({
+    productId: Joi.string().required(),
+  }),
+  files: Joi.array().label('images').min(1).required(),
+};
+
 module.exports = {
   getProducts,
   getProductDetail,
+  addProduct,
+  addPreviewImages,
 };

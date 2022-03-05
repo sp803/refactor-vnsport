@@ -5,6 +5,7 @@ const httpStatus = require('http-status');
 const categoryService = require('./category.service');
 const Brand = require('../models/brand.model');
 const ProductImage = require('../models/product-image.model');
+const sequelizeConnection = require('../models/db-connection');
 
 const productPreviewAttributes = [
   'id',
@@ -28,7 +29,7 @@ const generateProductFilterOption = (filterOption = {}) => {
   }
 
   if (sortBy) {
-    option.order = Product.sortOptions[sortBy];
+    option.order = [Product.sortOptions[sortBy]];
   }
 
   if (brandId) {
@@ -87,7 +88,87 @@ const getProductsByCategoryGroupCode = async (
   return Product.findAndCountAll(option);
 };
 
-const createProduct = () => {};
+const createPreviewImageAndAddToProduct = async (
+  previewImageUrls = [],
+  product,
+  transaction = null
+) => {
+  if (!previewImageUrls || previewImageUrls.length === 0) return null;
+
+  const transactionOption = transaction ? { transaction } : {};
+
+  const previewImages = await ProductImage.bulkCreate(
+    previewImageUrls.map((url) => ({ productId: product.id, url })),
+    { ...transactionOption }
+  );
+  return previewImages;
+};
+
+const createProduct = async ({
+  title,
+  detail,
+  price,
+  discountPrice,
+  warrantyPeriodByDay,
+  state,
+  brandId,
+  categoryId,
+  mainImageUrl,
+  previewImageUrls,
+}) => {
+  const [brand, category] = await Promise.all([
+    Brand.findByPk(brandId),
+    Category.findByPk(categoryId),
+  ]);
+
+  if (!brand) throw new ApiError(httpStatus.BAD_REQUEST, 'Brand id not exists');
+  if (!category)
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Category not exists');
+  if (await Product.isTitleExists(title))
+    throw new ApiError(httpStatus.CONFLICT, 'Product title already taken');
+
+  const transaction = await sequelizeConnection.transaction();
+  try {
+    const product = await Product.create(
+      {
+        title,
+        detail,
+        price,
+        discountPrice,
+        warrantyPeriodByDay,
+        state,
+        brandId,
+        categoryId,
+        mainImageUrl,
+      },
+      { transaction }
+    );
+
+    if (previewImageUrls?.length > 0) {
+      await createPreviewImageAndAddToProduct(
+        previewImageUrls,
+        product,
+        transaction
+      );
+    }
+    transaction.commit();
+    return product;
+  } catch (e) {
+    transaction.rollback();
+    throw e;
+  }
+};
+
+const addPreviewImagesToProductByProductId = async (
+  productId,
+  previewImageUrls = []
+) => {
+  const product = await Product.findByPk(productId);
+  if (!product)
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product id not exists');
+
+  await createPreviewImageAndAddToProduct(previewImageUrls, product);
+};
 
 module.exports = {
   getProductDetail,
@@ -96,4 +177,5 @@ module.exports = {
   getProductsByCategoryGroupCode,
   increaseProductVisitedCount,
   createProduct,
+  addPreviewImagesToProductByProductId,
 };

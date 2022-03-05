@@ -1,5 +1,7 @@
+const httpStatus = require('http-status');
 const productService = require('../services/product.service');
 const handleError = require('../utils/handle-error');
+const imageUtils = require('../utils/image.util');
 
 const getProducts = handleError(async (req, res) => {
   const { categoryCode, categoryGroupCode, brandId, page, limit, sortBy } =
@@ -31,7 +33,40 @@ const getProduct = handleError(async (req, res) => {
   productService.increaseProductVisitedCount(productId);
 });
 
+const addProduct = handleError(async (req, res) => {
+  const {
+    images,
+    mainImage: [mainImage],
+  } = req.files;
+
+  req.body.mainImageUrl = imageUtils.createImageUrlFromMulterFile(mainImage);
+  
+  if (images?.length > 0) {
+    req.body.previewImageUrls = images.map((image) =>
+      imageUtils.createImageUrlFromMulterFile(image)
+    );
+  }
+
+  const product = await productService.createProduct(req.body);
+  res.json({ product });
+});
+
+const addPreviewImages = handleError(async (req, res) => {
+  const { productId } = req.params;
+  const images = req.files;
+  const previewImageUrls = images.map((image) =>
+    imageUtils.createImageUrlFromMulterFile(image)
+  );
+  await productService.addPreviewImagesToProductByProductId(
+    productId,
+    previewImageUrls
+  );
+  return res.sendStatus(httpStatus.CREATED);
+});
+
 module.exports = {
   getProducts,
   getProduct,
+  addProduct,
+  addPreviewImages,
 };
