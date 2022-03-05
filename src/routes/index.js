@@ -12,6 +12,12 @@ const routes = express.Router();
 /*------------------/api----------------------*/
 /*--------------------------------------------*/
 
+
+routes.use("/test", async(req, res, next) => {
+  
+})
+
+
 routes.use('/', commonRoutes);
 routes.use('/admin', adminRoutes);
 

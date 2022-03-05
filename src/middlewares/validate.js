@@ -10,6 +10,8 @@ const validate = (schema) => (req, res, next) => {
     .prefs({ errors: { label: 'key' }, abortEarly: false })
     .validate(object);
 
+
+  console.log('validating product')
   if (error) {
     const errorMessage = error.details
       .map((details) => details.message)

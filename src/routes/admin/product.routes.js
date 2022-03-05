@@ -104,47 +104,50 @@ routes.post(
 
 /**
  * @openapi
- * /api/admin/products/{id}/add-image:
+ * /api/admin/products/check-title:
  *  post:
  *    tags: [Admin Product]
- *    summary: Add preview images to product
+ *    summary: Check if product's title have been taken
  *    security:
  *      - bearerAuth: []
  *    requestBody:
- *      required: true
  *      content:
- *        multipart/form-data:
+ *        application/json:
  *          schema:
  *            type: object
  *            required:
- *              - images
+ *              - title
  *            properties:
- *              images:
- *                type: array
- *                items:
- *                  type: string
- *                  format: binary
+ *              title:
+ *                type: string
+ *                minLength: 4
+ *                maxLength: 101
  *    responses:
- *      201:
- *        description: Add preview images success
+ *      204:
+ *        description: Title is ok to use
  *      400:
- *        description: Invalid field
- *        content:
- *          application/json:
- *            example:
- *              error: "\"images\" is required"
+ *        $ref: "#components/responses/BadRequest"
+ *      409:
+ *        $ref: "#components/responses/Conflict"
  *      403:
  *        $ref: '#components/responses/Forbidden'
  *      401:
  *        $ref: '#components/responses/Unauthorized'
- *      404:
- *        $ref: '#components/responses/NotFound'
  */
 routes.post(
-  '/:productId/add-image',
-  upload.handleImagesUpload('images'),
-  validate(productValidation.addPreviewImages),
-  productController.addPreviewImages
+  '/check-title',
+  validate(productValidation.checkProductTitleIsUnique),
+  productController.checkProductTitleIsUnique
+);
+
+routes.put(
+  '/:productId',
+  upload.handleMixedImageUpload([
+    { name: 'images' },
+    { name: 'mainImage', maxCount: 1 },
+  ]),
+  validate(productValidation.updateProduct),
+  productController.updateProduct
 );
 
 module.exports = routes;

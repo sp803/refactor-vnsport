@@ -175,14 +175,22 @@ components:
     ProductImage:
       type: object
       properties:
-        id: 
+        id:
           type: number
-        url: 
+        url:
           type: string
         productId:
           type: string
 
   responses:
+    BadRequest:
+      description: Invalid field
+      content:
+        application/json:
+          schema:
+            type: object
+          example:
+            error: \"title\" is required, \"detail\" is required, \"price\" is required, \"warrantyPeriodByDay\" is required, \"brandId\" is required, \"categoryId\" is required
     DuplicateEmail:
       description: Email already taken
       content:
@@ -215,3 +223,9 @@ components:
             $ref: '#/components/schemas/Error'
           example:
             error: Not found
+    Conflict:
+      description: Some field is not unique
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

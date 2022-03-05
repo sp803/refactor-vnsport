@@ -3,6 +3,7 @@ const User = require('./user.model');
 const Account = require('./account.model');
 const ProductImage = require('./product-image.model');
 const Product = require('./product.model');
+const CategoryBrand = require('./category-brand.model');
 const Category = require('./category.model');
 const Brand = require('./brand.model');
 const CategoryGroup = require('./category-group.model');
@@ -35,8 +36,8 @@ Brand.hasMany(Product);
 Product.belongsTo(Brand);
 
 // Category --- Brand *-*
-Category.belongsToMany(Brand, { through: 'category-brand', timestamps: false });
-Brand.belongsToMany(Category, { through: 'category-brand', timestamps: false });
+Category.belongsToMany(Brand, { through: CategoryBrand, onDelete: 'CASCADE' });
+Brand.belongsToMany(Category, { through: CategoryBrand, onDelete: 'CASCADE' });
 
 // Product --- ProductPreview 1-*
 Product.hasMany(ProductReview);
@@ -59,10 +60,10 @@ User.hasMany(ChatMessage);
 ChatMessage.belongsTo(User);
 
 exports.initialize = async () => {
-  const force = false;
+  const force = !false;
   const syncOptions = { force, alter: !force };
   if (syncOptions.force) {
-    dbUtils.cleanImageUploadFolder();
+    dbUtils.cleanImageUploadFolder(syncOptions);
   }
   await sequelizeConnection.sync();
 

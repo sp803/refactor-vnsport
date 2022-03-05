@@ -4,13 +4,18 @@
   "private": true,
   "scripts": {
     "start": "node app",
-    "dev": "nodemon app"
+    "dev": "nodemon app",
+    "craw": "node ./data-crawler/main.craw.js",
+    "upload": "node ./data-crawler/upload.js"
   },
   "dependencies": {
+    "async-mutex": "^0.3.2",
+    "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
     "debug": "~2.6.9",
     "dotenv": "^16.0.0",
     "express": "~4.16.1",
+    "form-data": "^4.0.0",
     "http-status": "^1.5.0",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",

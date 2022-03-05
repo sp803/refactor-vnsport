@@ -48,9 +48,32 @@ const addPreviewImages = {
   files: Joi.array().label('images').min(1).required(),
 };
 
+const checkProductTitleIsUnique = {
+  body: Joi.object({
+    title: Joi.string().min(4).max(101).required(),
+  }),
+};
+
+const updateProduct = {
+  body: Joi.object({
+    title: Joi.string().min(4).max(101).required(),
+    detail: Joi.string().min(1).required(),
+    price: Joi.number().min(0).required(),
+    discountPrice: Joi.number().min(0).max(Joi.ref('price')),
+    warrantyPeriodByDay: Joi.number().min(0).required(),
+    availableQuantity: Joi.number().min(0),
+    state: Joi.string().equal(...Object.values(Product.state)),
+    brandId: Joi.string().required(),
+    categoryId: Joi.string().required(),
+    removeImageIds: Joi.array().items(Joi.number()),
+  }),
+};
+
 module.exports = {
   getProducts,
   getProductDetail,
   addProduct,
   addPreviewImages,
+  checkProductTitleIsUnique,
+  updateProduct,
 };

@@ -5,6 +5,12 @@ const categoryService = require('./category.service');
 const ApiError = require('../errors/ApiError');
 const httpStatus = require('http-status');
 
+const findBrandById = async (brandId) => {
+  const brand = await Brand.findByPk(brandId);
+  if (!brand) throw new ApiError(httpStatus.NOT_FOUND, 'Brand id not exists');
+  return brand;
+};
+
 const getBrands = () => {
   return Brand.findAll();
 };
@@ -37,6 +43,7 @@ const getBrandsByCategoryGroupCode = async (categoryGroupCode) => {
 };
 
 module.exports = {
+  findBrandById,
   getBrands,
   getBrandsByCategoryCode,
   getBrandsByCategoryGroupCode,

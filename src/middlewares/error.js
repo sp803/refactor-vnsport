@@ -19,7 +19,10 @@ const errorHandler = (err, req, res, next) => {
 
   if (err instanceof ValidationError) {
     const errors = errorParser.parseValidationErrors(err);
-    return res.sendStatus(httpStatus.BAD_REQUEST).json(errors);
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      return res.status(httpStatus.CONFLICT).json(errors);
+    }
+    return res.status(httpStatus.BAD_REQUEST).json(errors);
   }
 
   res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
