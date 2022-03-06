@@ -171,7 +171,13 @@ components:
         name:
           type: string
         code:
-          type: Unique string id, generated from name
+          type: string
+          description: Unique string id, generated from name
+      example:
+        id: 1,
+        name: Khác
+        code: khac
+
     ProductImage:
       type: object
       properties:

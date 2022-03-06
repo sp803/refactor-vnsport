@@ -1,6 +1,5 @@
 const Category = require('../models/category.model');
 const Product = require('../models/product.model');
-const brandService = require('./brand.service');
 const CategoryGroup = require('../models/category-group.model');
 const Brand = require('../models/brand.model');
 const ApiError = require('../errors/ApiError');
@@ -111,6 +110,32 @@ const deleteCategory = async (categoryId) => {
     );
   }
   return category.destroy();
+};
+
+const createCategoryGroup = async ({ name }) => {
+  await checkCategoryGroupNameExists(name);
+  return CategoryGroup.create({ name });
+};
+
+const updateCategoryGroup = async (categoryGroupId, { name }) => {
+  const categoryGroup = await findCategoryGroupById(categoryGroupId);
+  if (categoryGroup.name === name) return;
+  await checkCategoryGroupNameExists(name);
+  categoryGroup.name = name;
+  return categoryGroup.save();
+};
+
+const deleteCategoryGroup = async (categoryGroupId) => {
+  const categoryGroup = await findCategoryGroupById(categoryGroupId, {
+    include: Category,
+  });
+  if (categoryGroup.categories?.length > 0) {
+    throw new ApiError(
+      httpStatus.CONFLICT,
+      "Can't delete category group because some category is belong to this category group"
+    );
+  }
+  return categoryGroup.destroy();
 };
 
 module.exports = {

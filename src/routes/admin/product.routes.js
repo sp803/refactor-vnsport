@@ -140,6 +140,92 @@ routes.post(
   productController.checkProductTitleIsUnique
 );
 
+/**
+ * @openapi
+ * /api/admin/products/{id}:
+ *  put:
+ *    tags: [Admin Product]
+ *    summary: Update product
+ *    security:
+ *      - bearerAuth: []
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        multipart/form-data:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - title
+ *              - detail
+ *              - price
+ *              - warrantyPeriodByDay
+ *              - availableQuantity
+ *              - state
+ *              - brandId
+ *              - categoryId
+ *            properties:
+ *              title:
+ *                type: string
+ *                minLength: 4
+ *                maxLength: 101
+ *              detail:
+ *                type: string
+ *                minLength: 1
+ *              price:
+ *                type: number
+ *                minimum: 0
+ *              discountPrice:
+ *                type: number
+ *                minimum: 0
+ *                maximum: price
+ *              warrantyPeriodByDay:
+ *                type: number
+ *                minimum: 0
+ *              availableQuantity:
+ *                type: number
+ *                minimum: 0
+ *              state:
+ *                type: string
+ *                description: available value [available, outstock, hidden]
+ *              brandId:
+ *                type: number
+ *              categoryId:
+ *                type: number
+ *              removeImageIds:
+ *                type: array
+ *                description: List of productImage's id need to be remove
+ *                items:
+ *                  type: number
+ *              mainImage:
+ *                type: string
+ *                format: byte
+ *                description: New product main image
+ *              images:
+ *                type: array
+ *                description: Array of new product images
+ *                items:
+ *                  type: string
+ *                  format: byte
+ *                  description: Product's preview images
+ *    responses:
+ *      204:
+ *        description: Update success
+ *      400:
+ *        description: Invalid field
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: "\"title\" is required"
+ *      409:
+ *        description: Title already exists
+ *      403:
+ *        $ref: '#components/responses/Forbidden'
+ *      401:
+ *        $ref: '#components/responses/Unauthorized'
+ *      404:
+ *        $ref: '#components/responses/NotFound'
+ *
+ */
 routes.put(
   '/:productId',
   upload.handleMixedImageUpload([
