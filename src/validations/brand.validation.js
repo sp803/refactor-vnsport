@@ -7,6 +7,20 @@ const getBrands = {
   }).without('categoryCode', 'categoryGroupCode'),
 };
 
+const addBrand = {
+  body: Joi.object({
+    name: Joi.string().min(1).max(254).required(),
+  }),
+};
+
+const updateBrand = {
+  body: Joi.object({
+    name: Joi.string().min(1).max(254).required(),
+  }),
+};
+
 module.exports = {
   getBrands,
+  addBrand,
+  updateBrand,
 };
