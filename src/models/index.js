@@ -10,6 +10,7 @@ const CategoryGroup = require('./category-group.model');
 const ProductReview = require('./product-review.model');
 const ChatRoom = require('./chat-room.model');
 const ChatMessage = require('./chat-message.model');
+const Cart = require('./cart.model');
 
 const dbUtils = require('../utils/database.utils');
 
@@ -58,6 +59,10 @@ ChatMessage.belongsTo(ChatRoom);
 // user --- ChatMessage 1-*
 User.hasMany(ChatMessage);
 ChatMessage.belongsTo(User);
+
+// user --- product *-* (Cart)
+User.belongsToMany(Product, { through: Cart });
+Product.belongsToMany(User, { through: Cart });
 
 exports.initialize = async () => {
   const force = !false;

@@ -47,6 +47,13 @@ const increaseProductVisitedCount = async (productId) => {
 
 const checkProductTitleExists = (title) => Product.isTitleExists(title);
 
+const findProductById = async (productId, options = {}) => {
+  const product = await Product.findByPk(productId, options);
+  if (!product)
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product id not exists');
+  return product;
+};
+
 const getProductDetail = async (productId) => {
   const product = await Product.findByPk(productId, {
     include: [Brand, Category, ProductImage],
@@ -257,4 +264,5 @@ module.exports = {
   checkProductTitleExists,
   removeProductImages,
   updateProduct,
+  findProductById,
 };

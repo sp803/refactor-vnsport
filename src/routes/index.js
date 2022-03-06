@@ -12,17 +12,11 @@ const routes = express.Router();
 /*------------------/api----------------------*/
 /*--------------------------------------------*/
 
-
-routes.use("/test", async(req, res, next) => {
-  
-})
-
-
 routes.use('/', commonRoutes);
 routes.use('/admin', adminRoutes);
 
 routes.use((req, res) => {
-  return res.sendStatus(httpStatus.NOT_FOUND);
+  return res.status(httpStatus.NOT_FOUND).json({ error: 'Endpoint not found' });
 });
 
 routes.use(errorMiddlewares.errorHandler);

@@ -92,6 +92,7 @@ const upload = require('../../middlewares/upload');
  *      401:
  *        $ref: '#components/responses/Unauthorized'
  */
+
 routes.post(
   '/',
   upload.handleMixedImageUpload([
@@ -134,6 +135,7 @@ routes.post(
  *      401:
  *        $ref: '#components/responses/Unauthorized'
  */
+
 routes.post(
   '/check-title',
   validate(productValidation.checkProductTitleIsUnique),
@@ -226,6 +228,7 @@ routes.post(
  *        $ref: '#components/responses/NotFound'
  *
  */
+
 routes.put(
   '/:productId',
   upload.handleMixedImageUpload([
