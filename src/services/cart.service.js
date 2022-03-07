@@ -48,9 +48,9 @@ const getProductsInUserCart = async (user) => {
   });
 
   return cart.map((product) => {
-    const quantity = product.Cart.quantity;
+    const quantity = product.cart.quantity;
     const tempProduct = { ...product.dataValues };
-    delete tempProduct.Cart;
+    delete tempProduct.cart;
     return {
       ...tempProduct,
       quantity,

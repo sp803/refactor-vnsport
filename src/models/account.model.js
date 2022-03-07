@@ -66,10 +66,15 @@ Account.init(
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
     },
+    otpCode: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize: sequelizeConnection,
     modelName: 'account',
+    timestamps: false,
     hooks: {
       async beforeCreate(account) {
         account.password = await bcrypt.hash(account.password, 10);

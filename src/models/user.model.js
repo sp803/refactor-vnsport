@@ -157,6 +157,7 @@ User.init(
   {
     sequelize: sequelizeConnection,
     modelName: 'user',
+    timestamps: false,
   }
 );
 

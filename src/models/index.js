@@ -11,6 +11,8 @@ const ProductReview = require('./product-review.model');
 const ChatRoom = require('./chat-room.model');
 const ChatMessage = require('./chat-message.model');
 const Cart = require('./cart.model');
+const OrderGroup = require('./order-group.model');
+const Order = require('./order.model');
 
 const dbUtils = require('../utils/database.utils');
 
@@ -64,13 +66,24 @@ ChatMessage.belongsTo(User);
 User.belongsToMany(Product, { through: Cart });
 Product.belongsToMany(User, { through: Cart });
 
+// user - order
+// User has many order group, each order group has many order, and each order have one product
+User.hasMany(OrderGroup);
+OrderGroup.belongsTo(User);
+
+OrderGroup.hasMany(Order);
+Order.belongsTo(OrderGroup);
+
+Product.hasMany(Order);
+Order.belongsTo(Product);
+
 exports.initialize = async () => {
   const force = !false;
   const syncOptions = { force, alter: !force };
   if (syncOptions.force) {
     dbUtils.cleanImageUploadFolder(syncOptions);
   }
-  await sequelizeConnection.sync();
+  await sequelizeConnection.sync(syncOptions);
 
   await Promise.all([
     dbUtils.createDefaultAdminAccount(),

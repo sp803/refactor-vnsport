@@ -2,20 +2,24 @@ const { Model, DataTypes } = require('sequelize');
 
 const sequelizeConnection = require('./db-connection');
 
-class Cart extends Model {}
+class Order extends Model {}
 
-Cart.init(
+Order.init(
   {
     quantity: {
       type: DataTypes.INTEGER,
-      defaultValue: 1,
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
     },
   },
   {
     sequelize: sequelizeConnection,
-    modelName: 'cart',
+    modelName: 'order',
     timestamps: false,
   }
 );
 
-module.exports = Cart;
+module.exports = Order;

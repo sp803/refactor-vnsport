@@ -13,7 +13,7 @@ CategoryBrand.init(
   },
   {
     sequelize: sequelizeConnection,
-    modelName: 'CategoryBrand',
+    modelName: 'categoryBrand',
     timestamps: false,
   }
 );
