@@ -39,11 +39,12 @@ const createUser = async ({ name, email, dob, gender, password }) => {
 };
 
 const validateLogin = async ({ email, password }) => {
-  const user = await findUserByEmail(email);
+  const user = await findUserByEmail(email, {
+    attributes: ['id', 'name', 'avatarUrl'],
+    include: Account,
+  });
   if (!user)
     throw new ApiError(httpStatus.NOT_FOUND, 'Email not belong to any user');
-
-  user.account = await user.getAccount();
 
   const passwordIsCorrect = await bcrypt.compare(
     password,
@@ -52,7 +53,12 @@ const validateLogin = async ({ email, password }) => {
   if (!passwordIsCorrect)
     throw new ApiError(httpStatus.BAD_REQUEST, 'Password not correct');
 
-  return user;
+  return {
+    ...user.dataValues,
+    ...(user.account.role !== Account.role.customer
+      ? { role: user.account.role }
+      : {}),
+  };
 };
 
 const changeUserKey = async ({ user, userId }) => {

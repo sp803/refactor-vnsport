@@ -10,6 +10,10 @@ class OrderGroup extends Model {
     done: 'done',
     canceled: 'canceled',
   };
+
+  static sortOption = {
+    newest: ['createdAt', 'ASC'],
+  };
 }
 
 OrderGroup.init(
@@ -32,9 +36,14 @@ OrderGroup.init(
       allowNull: false,
     },
     note: {
-      type:DataTypes.TEXT,
+      type: DataTypes.TEXT,
       allowNull: true,
-    }
+    },
+    reason: {
+      // reason only use when order is canceled. reason why order was cancel
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   },
   {
     sequelize: sequelizeConnection,
