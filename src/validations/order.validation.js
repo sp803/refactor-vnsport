@@ -24,12 +24,22 @@ const updateOrderGroupContact = {
 
 const updateOrderGroupState = {
   body: Joi.object({
-    state: Joi.string().equal(Object.values(OrderGroup.state)).required(),
-    reason: Joi.string().when('state', {
-      is: OrderGroup.state.canceled,
-      then: Joi.string().required(),
-    }),
-  }).with(''),
+    state: Joi.string()
+      .equal(
+        (() => {
+          const option = { ...OrderGroup.state };
+          delete option.canceled;
+          return Object.values(option);
+        })()
+      )
+      .required(),
+  }),
+};
+
+const cancelOrder = {
+  body: Joi.object({
+    reason: Joi.string().required(),
+  }),
 };
 
 const getOrderGroup = {
@@ -45,4 +55,5 @@ module.exports = {
   updateOrderGroupContact,
   updateOrderGroupState,
   getOrderGroup,
+  cancelOrder,
 };

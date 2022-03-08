@@ -6,13 +6,7 @@ const orderValidation = require('../../validations/order.validation');
 routes.get(
   '/',
   validate(orderValidation.getOrderGroup),
-  orderController.getOrderGroupsByUser
-);
-
-routes.post(
-  '/',
-  validate(orderValidation.createOrder),
-  orderController.createOrder
+  orderController.getOrderGroups
 );
 
 routes.put(
@@ -22,8 +16,15 @@ routes.put(
 );
 
 routes.put(
+  '/:orderGroupId/state',
+  validate(orderValidation.updateOrderGroupState),
+  orderController.updateOrderGroupState
+);
+
+routes.put(
   '/:orderGroupId/cancel',
   validate(orderValidation.cancelOrder),
   orderController.cancelOrder
 );
+
 module.exports = routes;

@@ -51,7 +51,7 @@ const checkAllProductInOrderIsAvailableAndGetProducts = async (products) => {
   ];
 };
 
-const findOrderGroupById = async ({ orderGroupId }, options = {}) => {
+const findOrderGroupById = async (orderGroupId, options = {}) => {
   const orderGroup = OrderGroup.findByPk(orderGroupId, options);
   if (!orderGroup) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Order group id not exists');
@@ -123,18 +123,28 @@ const updateOrderGroupContact = async (
   return orderGroup.save();
 };
 
-const updateOrderGroupState = async (orderGroupId, { state, reason }) => {
-  const orderGroup = await findOrderGroupById(orderGroupId);
-  if (state === OrderGroup.state.canceled && !reason) {
+const updateOrderGroupState = async (orderGroupId, { state }) => {
+  if (state === OrderGroup.state.canceled)
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      'Reason is required while canceling order'
+      "Can't cancel order with this request"
     );
-  }
+
+  const orderGroup = await findOrderGroupById(orderGroupId);
   orderGroup.state = state;
-  if (state === OrderGroup.state.canceled) {
-    orderGroup.reason = reason;
-  }
+  return orderGroup.save();
+};
+
+const cancelOrder = async (orderGroupId, { reason }) => {
+  const orderGroup = await findOrderGroupById(orderGroupId);
+  if (orderGroup.state !== OrderGroup.state.new)
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "Order can only be cancel when order's state is new"
+    );
+
+  orderGroup.state = OrderGroup.state.canceled;
+  orderGroup.reason = reason;
   return orderGroup.save();
 };
 
@@ -164,4 +174,5 @@ module.exports = {
   updateOrderGroupState,
   getOrderGroups,
   getOrderGroupsByUser,
+  cancelOrder,
 };

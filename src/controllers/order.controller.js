@@ -21,6 +21,11 @@ const updateOrderGroupState = handleError(async (req, res) => {
   res.sendStatus(httpStatus.NO_CONTENT);
 });
 
+const cancelOrder = handleError(async (req, res) => {
+  await orderService.cancelOrder(req.params.orderGroupId, req.body);
+  res.sendStatus(httpStatus.NO_CONTENT);
+});
+
 const getOrderGroups = handleError(async (req, res) => {
   const orderGroups = await orderService.getOrderGroups(req.query);
   res.json({ orderGroups });
@@ -41,4 +46,5 @@ module.exports = {
   updateOrderGroupState,
   getOrderGroups,
   getOrderGroupsByUser,
+  cancelOrder,
 };
